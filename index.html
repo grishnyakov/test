@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    ////////////////////////////////////////////////
+
+
+
+
+
+
+    console.log("typeof {}",typeof {}); //"object"
+    console.log("typeof null",typeof null); //"object"
+    console.log("typeof undefined",typeof undefined); //"undefined"
+    console.log("typeof typeof null",typeof typeof typeof null); //"string"
+    console.log("typeof 1",typeof 1); //"number"
+    console.log("typeof 'str'",typeof 'str'); //"string"
+
+
+
+
+
+
+
+
+
+
+    //////////////////////////////////////////////////
+
+    console.log('----Объект передается в функцию по ссылке, значения копируются');
+
+
+
+
+    var a = {counter: 1};
+    function inc(obj) {   //Объект по ссылке, значения копируются
+        obj.counter++;   //изменяем объект, который прислали!
+        obj.edited = true;
+    }
+    inc(a); //
+    console.log('a.counter',a.counter); // 2 !!!!!!!!!!!!!
+
+
+
+
+    //////////////////////////////////////////////////
+
+    console.log('----(function(){})()');
+
+
+
+
+    //это всё прекрасно работает
+    ({
+        method:function f() {
+            function test(){
+                console.log('({method:f}).method();');  //выведится
+            }
+            test();
+        }
+    }).method();
+
+    //это всё прекрасно работает
+    (()=>{console.log('Стрелочная функция тоже работает')})();
+
+
+
+
+    //////////////////////////////////////////////////
+
+
+
+
+
+    console.log('----prototype');
+
+    console.log('Чтобы новым объектам автоматически ставить прототип, конструктору ставится свойство prototype. При создании объекта через new, в его прототип __proto__ записывается ссылка из prototype функции-конструктора');
+    console.log('Само по себе, без вызова оператора new, оно вообще ничего не делает, его единственное назначение – указывать __proto__ для новых объектов.');
+    console.log('new, свойство prototype будет использовано лишь в том случае, если это объект');
+
+
+
+    var animal = {
+        eats: true
+    };
+    function Rabbit(name) {
+        this.name = name;
+    }
+    Rabbit.prototype = animal;
+    //Rabbit.prototype = {};  //обнулил прототип
+
+    var rabbit = new Rabbit("Кроль"); //  rabbit.__proto__ == animal
+
+    console.log("rabbit.eats: ",rabbit.eats); // true
+
+    Object.getOwnPropertyNames(Rabbit.prototype); //получить все ключи объекта
+    //если задать прототип после создания объекта, то он НЕ будет включен в класс
+
+
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////
+
+
+
+
+    console.log('----Замыкание');
+
+    console.log('Замыкание – это функция вместе со всеми внешними переменными, которые ей доступны.');
+
+    console.log('Интерпретатор сначала ищет переменные в своем окружении, потом в __proto__. если не нашел - он обращается к внешнему лексическому окружению через scope ');
+
+
+
+//В какую переменную будет присвоено значение?
+    var value = 0;
+
+    function f1() {
+        if (1) {
+            value = true;  // 2) интерпретатор сюда запишет true
+        } else {
+            var value = false;   //1) интерпретатор создаст локальную value
+        }
+
+        console.log( 'value: ',value ); //3) true
+    }
+
+    f1(); // глобальная value  не будет изменена
+
+
+
+
+
+    var currentCount = 1;
+
+    function makeCounter() {
+        return function() {
+            return currentCount++; //тут функция без проблем получит доступ к currentCount. каждый вызова этой функции будет увеличивать счетчик на 1
+        };
+    }
+    var counter = makeCounter();
+    var counter2 = makeCounter();
+
+    console.log( counter() ); // 1
+    console.log( counter() ); // 2
+
+    console.log( counter2() ); // 3
+    console.log( counter2() ); // 4
+
+
+
+    ////////////////////////////////////////////////
+
+
+
+
+    // пробежать по ключам, стрелочные функции
+    console.log('----бег по ключам Object.keys(arr).map((key,index)');
+    var arr = {
+        "width": 10,
+        "height": 20
+    };
+
+    Object.keys(arr).map((key,index)=>{
+        console.log(key,index)
+    });
+
+
+
+
+
+
+
+    ////////////////////////////////////////////////
+
+
+
+
+
+
+    console.log('----this');
+    function f() {
+        //this = null;
+        console.log('this - константа - её нельзя переназначить');
+        console.log('this',this.val);
+    }
+    let obj = {val: 666};
+    obj.f = f;
+    obj.f();
+
+
+
+
+
+    ////////////////////////////////////////////////
+
+</script>
+
+
+</body>
+</html>
